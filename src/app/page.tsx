@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 
+import axios from "axios";
+
 const authServer = process.env.NEXT_PUBLIC_AUTH_SERVER;
 const webserver = process.env.NEXT_PUBLIC_WEB_SERVER;
 
@@ -10,19 +12,22 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const response = await fetch(`${authServer}/api/login`, {
-        method: "POST",
+      const response = await axios({
+        url: `${authServer}/api/login`,
+        method: "post",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+        data: {
           username: username,
           password: password,
-        }),
-        credentials: "include",
+        },
+        withCredentials: true,
       });
+
       console.log(response);
 
       window.location.href = `${webserver}/private/index.html`;
