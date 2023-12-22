@@ -62,7 +62,12 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <form onSubmit={handleSubmit}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               required
               type="text"
@@ -96,7 +101,7 @@ export default function Login() {
             >
               ログイン
             </Button>
-          </form>
+          </Box>
         </Box>
       </Container>
     </ThemeProvider>
