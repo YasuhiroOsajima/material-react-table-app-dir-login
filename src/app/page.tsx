@@ -1,12 +1,12 @@
 "use client";
 import { useState } from "react";
 
-const authServer = "http://192.168.33.13:9999";
-const webserver = "http://192.168.33.13";
+const authServer = process.env.AUTH_SERVER;
+const webserver = process.env.WEB_SERVER;
 
 export default function Login() {
   const [username, setUsername] = useState("");
-  const [passsword, setPassword] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +19,7 @@ export default function Login() {
         },
         body: JSON.stringify({
           username: username,
-          passsword: passsword,
+          password: password,
         }),
         credentials: "include",
       });
@@ -43,7 +43,7 @@ export default function Login() {
           required
         />
         <input
-          value={passsword}
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="text"
           name="password"
