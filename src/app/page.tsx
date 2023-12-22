@@ -2,6 +2,16 @@
 import { useState } from "react";
 
 import axios from "axios";
+import {
+  createTheme,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  TextField,
+  ThemeProvider,
+  Typography,
+} from "@mui/material";
 
 const authServer = process.env.NEXT_PUBLIC_AUTH_SERVER;
 const webserver = process.env.NEXT_PUBLIC_WEB_SERVER;
@@ -9,6 +19,7 @@ const webserver = process.env.NEXT_PUBLIC_WEB_SERVER;
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const defaultTheme = createTheme();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,27 +48,57 @@ export default function Login() {
     }
   };
   return (
-    <>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          type="text"
-          name="username"
-          placeholder="Username"
-          required
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="text"
-          name="password"
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-    </>
+    <ThemeProvider theme={defaultTheme}>
+      <Container component="main">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Typography component="h1" variant="h5">
+            Login
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              required
+              type="text"
+              id="username"
+              label="Username"
+              variant="filled"
+              fullWidth
+              margin="normal"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setUsername(e.target.value)
+              }
+            />
+            <TextField
+              required
+              type="password"
+              id="password"
+              label="Password"
+              variant="filled"
+              autoComplete="current-password"
+              fullWidth
+              margin="normal"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setPassword(e.target.value)
+              }
+            />
+            <Button
+              variant="contained"
+              type="submit"
+              fullWidth
+              sx={{ mt: 3, mb: 2 }}
+            >
+              ログイン
+            </Button>
+          </form>
+        </Box>
+      </Container>
+    </ThemeProvider>
   );
 }
