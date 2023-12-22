@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 
-const authServer = process.env.AUTH_SERVER;
-const webserver = process.env.WEB_SERVER;
+const authServer = process.env.NEXT_PUBLIC_AUTH_SERVER;
+const webserver = process.env.NEXT_PUBLIC_WEB_SERVER;
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -11,7 +11,7 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const responce = await fetch(`${authServer}/api/login`, {
+      const response = await fetch(`${authServer}/api/login`, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -23,6 +23,7 @@ export default function Login() {
         }),
         credentials: "include",
       });
+      console.log(response);
 
       window.location.href = `${webserver}/private/index.html`;
     } catch (error) {
