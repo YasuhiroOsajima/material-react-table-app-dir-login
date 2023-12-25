@@ -12,18 +12,23 @@ import {
   ThemeProvider,
   Typography,
 } from "@mui/material";
+import { useForm } from "react-hook-form";
 
 const authServer = process.env.NEXT_PUBLIC_AUTH_SERVER;
 const webserver = process.env.NEXT_PUBLIC_WEB_SERVER;
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const defaultTheme = createTheme();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const [authError, setAuthError] = useState("");
 
+  const {
+    register,
+    handleSubmit,
+    formState: { isDirty, errors },
+  } = useForm();
+
+  const handleLoginSubmit = async (username: string, password: string) => {
     try {
       const response = await axios({
         url: `${authServer}/api/login`,
@@ -40,13 +45,17 @@ export default function Login() {
       });
 
       console.log(response);
-
-      window.location.href = `${webserver}/private/index.html`;
+      window.location.href = `${webserver}/index.html`;
     } catch (error) {
       console.log(error);
-      alert("ログインに失敗しました");
+      setAuthError("ユーザ名またはパスワードが違います");
     }
   };
+
+  const onSubmit = (event: any): void => {
+    handleLoginSubmit(event.username, event.password);
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main">
@@ -64,10 +73,15 @@ export default function Login() {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             noValidate
             sx={{ mt: 1 }}
           >
+            {authError && (
+              <Typography variant="h5" color="error">
+                {authError}
+              </Typography>
+            )}{" "}
             <TextField
               required
               type="text"
@@ -76,9 +90,11 @@ export default function Login() {
               variant="filled"
               fullWidth
               margin="normal"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setUsername(e.target.value)
-              }
+              {...register("username", {
+                required: "必須項目です",
+              })}
+              error={Boolean(errors.username)}
+              helperText={errors.username?.message?.toString() || ""}
             />
             <TextField
               required
@@ -89,15 +105,22 @@ export default function Login() {
               autoComplete="current-password"
               fullWidth
               margin="normal"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setPassword(e.target.value)
-              }
+              {...register("password", {
+                required: "必須項目です",
+                minLength: {
+                  value: 6,
+                  message: "パスワードは6文字以上です",
+                },
+              })}
+              error={Boolean(errors.password)}
+              helperText={errors.password?.message?.toString() || ""}
             />
             <Button
               variant="contained"
               type="submit"
               fullWidth
               sx={{ mt: 3, mb: 2 }}
+              disabled={!isDirty}
             >
               ログイン
             </Button>
