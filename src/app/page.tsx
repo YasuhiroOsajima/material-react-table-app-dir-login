@@ -122,7 +122,7 @@ export default function Login() {
               sx={{ mt: 3, mb: 2 }}
               disabled={!isDirty}
             >
-              ログイン
+              Login
             </Button>
           </Box>
         </Box>
